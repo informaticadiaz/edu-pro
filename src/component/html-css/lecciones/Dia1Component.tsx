@@ -1,23 +1,40 @@
+"use client"
 import React, { useState } from 'react';
 import { ChevronDown, ChevronRight, Clock, Target, CheckCircle } from 'lucide-react';
 
-const Dia1Component = () => {
-  const [expandedSections, setExpandedSections] = useState({});
+interface ExpandedSections {
+  [key: string]: boolean;
+}
 
-  const toggleSection = (sectionId) => {
+interface CodeBlockProps {
+  children: React.ReactNode;
+  language?: string;
+}
+
+interface SectionProps {
+  id: string;
+  title: string;
+  children: React.ReactNode;
+  duration?: string;
+}
+
+const Dia1Component: React.FC = () => {
+  const [expandedSections, setExpandedSections] = useState<ExpandedSections>({});
+
+  const toggleSection = (sectionId: string): void => {
     setExpandedSections(prev => ({
       ...prev,
       [sectionId]: !prev[sectionId]
     }));
   };
 
-  const CodeBlock = ({ children, language = "html" }) => (
+  const CodeBlock: React.FC<CodeBlockProps> = ({ children, language = "html" }) => (
     <pre className="bg-gray-900 text-green-400 p-4 rounded-lg overflow-x-auto text-sm">
       <code>{children}</code>
     </pre>
   );
 
-  const Section = ({ id, title, children, duration }) => (
+  const Section: React.FC<SectionProps> = ({ id, title, children, duration }) => (
     <div className="mb-8 border border-gray-200 rounded-lg">
       <button
         onClick={() => toggleSection(id)}

@@ -1,29 +1,52 @@
+"use client"
 import React, { useState } from 'react';
 import { ChevronDown, ChevronRight, Clock, Target, CheckCircle, Code, Palette, FileText, Play } from 'lucide-react';
 
-const Dia2Component = () => {
-  const [expandedSections, setExpandedSections] = useState({});
+interface ExpandedSections {
+  [key: string]: boolean;
+}
 
-  const toggleSection = (sectionId) => {
+interface CodeBlockProps {
+  children: React.ReactNode;
+}
+
+interface SectionProps {
+  id: string;
+  title: string;
+  children: React.ReactNode;
+  duration?: string;
+  icon?: React.ComponentType<{ size?: number; className?: string }>;
+}
+
+interface ExerciseBoxProps {
+  title: string;
+  children: React.ReactNode;
+  type?: "practice" | "challenge";
+}
+
+const Dia2Component: React.FC = () => {
+  const [expandedSections, setExpandedSections] = useState<ExpandedSections>({});
+
+  const toggleSection = (sectionId: string): void => {
     setExpandedSections(prev => ({
       ...prev,
       [sectionId]: !prev[sectionId]
     }));
   };
 
-  const CodeBlock = ({ children }) => (
+  const CodeBlock: React.FC<CodeBlockProps> = ({ children }) => (
     <pre className="bg-gray-900 text-green-400 p-4 rounded-lg overflow-x-auto text-sm">
       <code>{children}</code>
     </pre>
   );
 
-  const CSSCodeBlock = ({ children }) => (
+  const CSSCodeBlock: React.FC<CodeBlockProps> = ({ children }) => (
     <pre className="bg-gray-900 text-blue-400 p-4 rounded-lg overflow-x-auto text-sm">
       <code>{children}</code>
     </pre>
   );
 
-  const Section = ({ id, title, children, duration, icon }) => {
+  const Section: React.FC<SectionProps> = ({ id, title, children, duration, icon }) => {
     const IconComponent = icon || FileText;
     return (
       <div className="mb-8 border border-gray-200 rounded-lg">
@@ -52,7 +75,7 @@ const Dia2Component = () => {
     );
   };
 
-  const ExerciseBox = ({ title, children, type = "practice" }) => {
+  const ExerciseBox: React.FC<ExerciseBoxProps> = ({ title, children, type = "practice" }) => {
     const bgColor = type === "practice" ? "bg-orange-50" : "bg-green-50";
     const textColor = type === "practice" ? "text-orange-800" : "text-green-800";
     const itemColor = type === "practice" ? "text-orange-700" : "text-green-700";

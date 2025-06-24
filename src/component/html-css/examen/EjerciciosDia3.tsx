@@ -1,3 +1,4 @@
+"use client"
 import React, { useState } from 'react';
 import { CheckCircle, XCircle, Code, Search, AlertCircle, Trophy, ChevronRight, Eye, EyeOff, Palette, Layout, Type, Target } from 'lucide-react';
 

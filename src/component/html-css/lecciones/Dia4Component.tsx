@@ -1,29 +1,63 @@
+"use client"
 import React, { useState } from 'react';
 import { ChevronDown, ChevronRight, Clock, Target, CheckCircle, Code, Palette, Layout, Zap, Grid, Smartphone, Trophy, Award } from 'lucide-react';
 
-const Dia4Component = () => {
-  const [expandedSections, setExpandedSections] = useState({});
+interface ExpandedSections {
+  [key: string]: boolean;
+}
 
-  const toggleSection = (sectionId) => {
+interface CodeBlockProps {
+  children: React.ReactNode;
+}
+
+interface SectionProps {
+  id: string;
+  title: string;
+  children: React.ReactNode;
+  duration?: string;
+  icon?: React.ComponentType<{ size?: number; className?: string }>;
+}
+
+interface ExerciseBoxProps {
+  title: string;
+  children: React.ReactNode;
+  type?: "practice" | "final";
+}
+
+interface HighlightBoxProps {
+  title: string;
+  children: React.ReactNode;
+  color?: "blue" | "yellow" | "green" | "purple" | "red";
+}
+
+interface ConceptBoxProps {
+  title: string;
+  children: React.ReactNode;
+}
+
+const Dia4Component: React.FC = () => {
+  const [expandedSections, setExpandedSections] = useState<ExpandedSections>({});
+
+  const toggleSection = (sectionId: string): void => {
     setExpandedSections(prev => ({
       ...prev,
       [sectionId]: !prev[sectionId]
     }));
   };
 
-  const CodeBlock = ({ children }) => (
+  const CodeBlock: React.FC<CodeBlockProps> = ({ children }) => (
     <pre className="bg-gray-900 text-green-400 p-4 rounded-lg overflow-x-auto text-sm">
       <code>{children}</code>
     </pre>
   );
 
-  const CSSCodeBlock = ({ children }) => (
+  const CSSCodeBlock: React.FC<CodeBlockProps> = ({ children }) => (
     <pre className="bg-gray-900 text-blue-400 p-4 rounded-lg overflow-x-auto text-sm">
       <code>{children}</code>
     </pre>
   );
 
-  const Section = ({ id, title, children, duration, icon }) => {
+  const Section: React.FC<SectionProps> = ({ id, title, children, duration, icon }) => {
     const IconComponent = icon || Code;
     return (
       <div className="mb-8 border border-gray-200 rounded-lg">
@@ -52,7 +86,7 @@ const Dia4Component = () => {
     );
   };
 
-  const ExerciseBox = ({ title, children, type = "practice" }) => {
+  const ExerciseBox: React.FC<ExerciseBoxProps> = ({ title, children, type = "practice" }) => {
     const bgColor = type === "practice" ? "bg-orange-50" : "bg-green-50";
     const textColor = type === "practice" ? "text-orange-800" : "text-green-800";
     const itemColor = type === "practice" ? "text-orange-700" : "text-green-700";
@@ -70,8 +104,8 @@ const Dia4Component = () => {
     );
   };
 
-  const HighlightBox = ({ title, children, color = "blue" }) => {
-    const colorClasses = {
+  const HighlightBox: React.FC<HighlightBoxProps> = ({ title, children, color = "blue" }) => {
+    const colorClasses: Record<string, string> = {
       blue: "bg-blue-50 text-blue-800 text-blue-700",
       yellow: "bg-yellow-50 text-yellow-800 text-yellow-700",
       green: "bg-green-50 text-green-800 text-green-700",
@@ -91,7 +125,7 @@ const Dia4Component = () => {
     );
   };
 
-  const ConceptBox = ({ title, children }) => (
+  const ConceptBox: React.FC<ConceptBoxProps> = ({ title, children }) => (
     <div className="bg-indigo-50 border-l-4 border-indigo-500 p-4 rounded-r-lg">
       <h5 className="font-semibold text-indigo-800 mb-2">{title}</h5>
       <div className="text-indigo-700 text-sm">

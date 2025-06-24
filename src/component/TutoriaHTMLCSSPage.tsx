@@ -11,9 +11,6 @@ import {
   Grid,
   Smartphone,
   Trophy,
-  Star,
-  Users,
-  Calendar,
   PlayCircle,
   FileText,
   Award,
@@ -23,9 +20,9 @@ import {
 } from 'lucide-react';
 
 const TutoriaHTMLCSSPage = () => {
-  const [diaExpandido, setDiaExpandido] = useState(null);
+  const [diaExpandido, setDiaExpandido] = useState<number | null>(null);
 
-  const toggleDia = (diaId) => {
+  const toggleDia = (diaId: number) => {
     setDiaExpandido(diaExpandido === diaId ? null : diaId);
   };
 

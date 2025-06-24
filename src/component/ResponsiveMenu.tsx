@@ -1,3 +1,4 @@
+"use client"
 import React, { useState, useEffect } from 'react';
 import { 
   Menu, 
@@ -12,9 +13,40 @@ import {
   Award
 } from 'lucide-react';
 
-const ResponsiveMenu = ({ currentRoute = 'indice' }) => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [activeDropdown, setActiveDropdown] = useState(null);
+// Define types
+interface SubMenuItem {
+  id: string;
+  title: string;
+  route: string;
+  icon: React.ReactElement;
+  description: string;
+}
+
+interface MenuItem {
+  id: string;
+  title: string;
+  route?: string;
+  icon: React.ReactElement;
+  description: string;
+  submenu?: SubMenuItem[];
+}
+
+interface Progress {
+  teoria: boolean;
+  ejercicios: boolean;
+}
+
+interface ProgressMap {
+  [key: string]: Progress;
+}
+
+interface ResponsiveMenuProps {
+  currentRoute?: string;
+}
+
+const ResponsiveMenu: React.FC<ResponsiveMenuProps> = ({ currentRoute = 'indice' }) => {
+  const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
+  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
 
   // Cerrar menú al hacer scroll en móvil
   useEffect(() => {
@@ -41,7 +73,7 @@ const ResponsiveMenu = ({ currentRoute = 'indice' }) => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  const menuItems = [
+  const menuItems: MenuItem[] = [
     {
       id: 'indice',
       title: 'Inicio',
@@ -139,29 +171,29 @@ const ResponsiveMenu = ({ currentRoute = 'indice' }) => {
     }
   ];
 
-  const toggleMenu = () => {
+  const toggleMenu = (): void => {
     setIsMenuOpen(!isMenuOpen);
     setActiveDropdown(null);
   };
 
-  const toggleDropdown = (itemId) => {
+  const toggleDropdown = (itemId: string): void => {
     setActiveDropdown(activeDropdown === itemId ? null : itemId);
   };
 
-  const handleNavigation = (route) => {
+  const handleNavigation = (route: string): void => {
     // Aquí iría tu lógica de navegación (React Router, Next.js, etc.)
     console.log(`Navegando a: ${route}`);
     setIsMenuOpen(false);
     setActiveDropdown(null);
   };
 
-  const isActive = (route) => {
+  const isActive = (route: string): boolean => {
     return currentRoute === route;
   };
 
-  const getDayProgress = (dayId) => {
+  const getDayProgress = (dayId: string): Progress => {
     // Lógica para calcular progreso (ejemplo)
-    const progress = {
+    const progress: ProgressMap = {
       dia1: { teoria: true, ejercicios: false },
       dia2: { teoria: false, ejercicios: false },
       dia3: { teoria: false, ejercicios: false },
@@ -240,9 +272,9 @@ const ResponsiveMenu = ({ currentRoute = 'indice' }) => {
                     </div>
                   ) : (
                     <button
-                      onClick={() => handleNavigation(item.route)}
+                      onClick={() => item.route && handleNavigation(item.route)}
                       className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                        isActive(item.route)
+                        item.route && isActive(item.route)
                           ? 'bg-blue-100 text-blue-600'
                           : 'text-gray-700 hover:text-blue-600 hover:bg-blue-50'
                       }`}
@@ -328,9 +360,9 @@ const ResponsiveMenu = ({ currentRoute = 'indice' }) => {
                   </div>
                 ) : (
                   <button
-                    onClick={() => handleNavigation(item.route)}
+                    onClick={() => item.route && handleNavigation(item.route)}
                     className={`w-full text-left flex items-center gap-3 px-3 py-2 rounded-md text-base font-medium transition-colors ${
-                      isActive(item.route)
+                      item.route && isActive(item.route)
                         ? 'bg-blue-100 text-blue-600'
                         : 'text-gray-700 hover:text-blue-600 hover:bg-blue-50'
                     }`}

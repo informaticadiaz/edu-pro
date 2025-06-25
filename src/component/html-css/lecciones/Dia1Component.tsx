@@ -128,9 +128,9 @@ const Dia1Component: React.FC = () => {
               <h5 className="font-semibold mb-2">Explicación línea por línea:</h5>
               <ul className="space-y-2 text-sm text-gray-700">
                 <li><code className="bg-gray-100 px-2 py-1 rounded">&lt;!DOCTYPE html&gt;</code>: Declara que es HTML5</li>
-                <li><code className="bg-gray-100 px-2 py-1 rounded">&lt;html lang="es"&gt;</code>: Elemento raíz, idioma español</li>
+                <li><code className="bg-gray-100 px-2 py-1 rounded">&lt;html lang=&quot;es&quot;&gt;</code>: Elemento raíz, idioma español</li>
                 <li><code className="bg-gray-100 px-2 py-1 rounded">&lt;head&gt;</code>: Información sobre el documento (no visible)</li>
-                <li><code className="bg-gray-100 px-2 py-1 rounded">&lt;meta charset="UTF-8"&gt;</code>: Codificación de caracteres</li>
+                <li><code className="bg-gray-100 px-2 py-1 rounded">&lt;meta charset=&quot;UTF-8&quot;&gt;</code>: Codificación de caracteres</li>
                 <li><code className="bg-gray-100 px-2 py-1 rounded">&lt;title&gt;</code>: Título que aparece en la pestaña del navegador</li>
                 <li><code className="bg-gray-100 px-2 py-1 rounded">&lt;body&gt;</code>: Contenido visible de la página</li>
               </ul>
@@ -141,7 +141,7 @@ const Dia1Component: React.FC = () => {
             <h4 className="text-lg font-semibold mb-3 text-gray-800">1.4 Elementos, etiquetas y atributos (10 min)</h4>
             <div className="bg-gray-50 p-4 rounded-lg mb-4">
               <h5 className="font-semibold mb-2">Anatomía de un elemento HTML:</h5>
-              <code className="text-lg">&lt;etiqueta atributo="valor"&gt;Contenido&lt;/etiqueta&gt;</code>
+              <code className="text-lg">&lt;etiqueta atributo=&quot;valor&quot;&gt;Contenido&lt;/etiqueta&gt;</code>
             </div>
             
             <CodeBlock>
@@ -179,8 +179,8 @@ const Dia1Component: React.FC = () => {
                 <h5 className="font-semibold text-orange-800 mb-2">EJERCICIO PRÁCTICO 1:</h5>
                 <ol className="text-orange-700 space-y-1 text-sm">
                   <li>1. Abrir VS Code</li>
-                  <li>2. Crear carpeta "mi-primera-web"</li>
-                  <li>3. Crear archivo "index.html"</li>
+                  <li>2. Crear carpeta &quot;mi-primera-web&quot;</li>
+                  <li>3. Crear archivo &quot;index.html&quot;</li>
                   <li>4. Escribir la estructura básica</li>
                   <li>5. Abrir con Live Server</li>
                 </ol>
@@ -434,7 +434,7 @@ en el medio.</p>
             <p className="text-green-700 mb-3">Crear una página personal que incluya:</p>
             <ol className="text-green-700 space-y-1">
               <li>1. Header con nombre y navegación</li>
-              <li>2. Sección "Sobre mí" con párrafos</li>
+              <li>2. Sección &quot;Sobre mí&quot; con párrafos</li>
               <li>3. Lista de habilidades o intereses</li>
               <li>4. Sección de contacto con enlaces</li>
               <li>5. Footer con información adicional</li>
@@ -485,8 +485,8 @@ en el medio.</p>
       <div className="bg-purple-50 p-6 rounded-lg">
         <h3 className="text-xl font-bold text-purple-800 mb-3">Ejercicios para casa (Opcional)</h3>
         <ol className="text-purple-700 space-y-2">
-          <li><strong>1. Mejorar la página personal:</strong> Añadir más secciones como "Experiencia" o "Proyectos"</li>
-          <li><strong>2. Crear una segunda página:</strong> "sobre-mi.html" y enlazarla desde index.html</li>
+          <li><strong>1. Mejorar la página personal:</strong> Añadir más secciones como &quot;Experiencia&quot; o &quot;Proyectos&quot;</li>
+          <li><strong>2. Crear una segunda página:</strong> &quot;sobre-mi.html&quot; y enlazarla desde index.html</li>
           <li><strong>3. Investigar:</strong> Buscar 5 etiquetas HTML que no hayamos visto hoy</li>
         </ol>
       </div>

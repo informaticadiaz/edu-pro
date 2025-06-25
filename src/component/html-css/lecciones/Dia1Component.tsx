@@ -28,7 +28,7 @@ const Dia1Component: React.FC = () => {
     }));
   };
 
-  const CodeBlock: React.FC<CodeBlockProps> = ({ children, language = "html" }) => (
+  const CodeBlock: React.FC<CodeBlockProps> = ({ children }) => (
     <pre className="bg-gray-900 text-green-400 p-4 rounded-lg overflow-x-auto text-sm">
       <code>{children}</code>
     </pre>

@@ -1,6 +1,6 @@
 "use client"
 import React, { useState } from 'react';
-import { ChevronDown, ChevronRight, Clock, Target, CheckCircle, Code, Palette, Layout, Zap, Grid, Smartphone, Trophy, Award } from 'lucide-react';
+import { ChevronDown, ChevronRight, Clock, Target, CheckCircle, Code, Layout, Zap, Grid, Trophy, Award } from 'lucide-react';
 
 interface ExpandedSections {
   [key: string]: boolean;

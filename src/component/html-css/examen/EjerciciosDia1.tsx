@@ -157,7 +157,7 @@ const EjerciciosDia1: React.FC = () => {
       tipo: 'verdadero-falso',
       categoria: 'Atributos',
       dificultad: 'Fácil',
-      pregunta: 'El atributo "alt" en las imágenes es obligatorio para la accesibilidad.',
+      pregunta: 'El atributo &quot;alt&quot; en las imágenes es obligatorio para la accesibilidad.',
       respuestaCorrecta: true,
       explicacion: 'El atributo "alt" proporciona texto alternativo para usuarios con discapacidades visuales y es fundamental para la accesibilidad web.'
     },

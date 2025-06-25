@@ -1,6 +1,6 @@
 "use client"
 import React, { useState, JSX } from 'react';
-import { CheckCircle, XCircle, Code, Grid, AlertCircle, Trophy, ChevronRight, Eye, EyeOff, Layout, Smartphone, Monitor, Award } from 'lucide-react';
+import { CheckCircle, XCircle, Code, Grid, AlertCircle, Trophy, ChevronRight, Eye, EyeOff, Layout, Smartphone, Award } from 'lucide-react';
 
 // Tipos para los ejercicios
 type TipoEjercicio = 'opcion-multiple' | 'codigo-completar' | 'codigo-escribir' | 'verdadero-falso';

@@ -1,30 +1,64 @@
 "use client"
-import React, { useState } from 'react';
-import { ChevronDown, ChevronRight, Clock, Target, CheckCircle, Code, Palette, Layout, Zap, Search } from 'lucide-react';
+import React, { useState, ReactNode } from 'react';
+import { ChevronDown, ChevronRight, Clock, Target, CheckCircle, Code, Palette, Layout, Zap, Search, LucideIcon } from 'lucide-react';
 
-const Dia3Component = () => {
-  const [expandedSections, setExpandedSections] = useState({});
+// Interfaces para tipar las props
+interface CodeBlockProps {
+  children: ReactNode;
+}
 
-  const toggleSection = (sectionId) => {
+interface CSSCodeBlockProps {
+  children: ReactNode;
+}
+
+interface SectionProps {
+  id: string;
+  title: string;
+  children: ReactNode;
+  duration?: string;
+  icon?: LucideIcon;
+}
+
+interface ExerciseBoxProps {
+  title: string;
+  children: ReactNode;
+  type?: "practice" | "project";
+}
+
+interface HighlightBoxProps {
+  title: string;
+  children: ReactNode;
+  color?: "blue" | "yellow" | "green" | "purple" | "red";
+}
+
+// Estado del componente
+interface ExpandedSections {
+  [key: string]: boolean;
+}
+
+const Dia3Component: React.FC = () => {
+  const [expandedSections, setExpandedSections] = useState<ExpandedSections>({});
+
+  const toggleSection = (sectionId: string): void => {
     setExpandedSections(prev => ({
       ...prev,
       [sectionId]: !prev[sectionId]
     }));
   };
 
-  const CodeBlock = ({ children }) => (
+  const CodeBlock: React.FC<CodeBlockProps> = ({ children }) => (
     <pre className="bg-gray-900 text-green-400 p-4 rounded-lg overflow-x-auto text-sm">
       <code>{children}</code>
     </pre>
   );
 
-  const CSSCodeBlock = ({ children }) => (
+  const CSSCodeBlock: React.FC<CSSCodeBlockProps> = ({ children }) => (
     <pre className="bg-gray-900 text-blue-400 p-4 rounded-lg overflow-x-auto text-sm">
       <code>{children}</code>
     </pre>
   );
 
-  const Section = ({ id, title, children, duration, icon }) => {
+  const Section: React.FC<SectionProps> = ({ id, title, children, duration, icon }) => {
     const IconComponent = icon || Code;
     return (
       <div className="mb-8 border border-gray-200 rounded-lg">
@@ -53,7 +87,7 @@ const Dia3Component = () => {
     );
   };
 
-  const ExerciseBox = ({ title, children, type = "practice" }) => {
+  const ExerciseBox: React.FC<ExerciseBoxProps> = ({ title, children, type = "practice" }) => {
     const bgColor = type === "practice" ? "bg-orange-50" : "bg-green-50";
     const textColor = type === "practice" ? "text-orange-800" : "text-green-800";
     const itemColor = type === "practice" ? "text-orange-700" : "text-green-700";
@@ -71,8 +105,8 @@ const Dia3Component = () => {
     );
   };
 
-  const HighlightBox = ({ title, children, color = "blue" }) => {
-    const colorClasses = {
+  const HighlightBox: React.FC<HighlightBoxProps> = ({ title, children, color = "blue" }) => {
+    const colorClasses: Record<string, string> = {
       blue: "bg-blue-50 text-blue-800 text-blue-700",
       yellow: "bg-yellow-50 text-yellow-800 text-yellow-700",
       green: "bg-green-50 text-green-800 text-green-700",

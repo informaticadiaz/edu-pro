@@ -1,14 +1,59 @@
 "use client"
-import React, { useState } from 'react';
+import React, { useState, JSX } from 'react';
 import { CheckCircle, XCircle, Code, Search, AlertCircle, Trophy, ChevronRight, Eye, EyeOff, Palette, Layout, Type, Target } from 'lucide-react';
 
-const EjerciciosDia3 = () => {
-  const [ejercicioActual, setEjercicioActual] = useState(0);
-  const [respuestas, setRespuestas] = useState({});
-  const [mostrarResultados, setMostrarResultados] = useState(false);
-  const [codigoVisibleIndex, setCodigoVisibleIndex] = useState(null);
+// Tipos para los ejercicios
+type TipoEjercicio = 'opcion-multiple' | 'codigo-completar' | 'codigo-escribir' | 'verdadero-falso';
+type Dificultad = 'Fácil' | 'Medio' | 'Difícil';
 
-  const ejercicios = [
+interface EjercicioBase {
+  id: number;
+  tipo: TipoEjercicio;
+  categoria: string;
+  dificultad: Dificultad;
+  pregunta: string;
+  explicacion: string;
+}
+
+interface EjercicioOpcionMultiple extends EjercicioBase {
+  tipo: 'opcion-multiple';
+  opciones: string[];
+  respuestaCorrecta: number;
+}
+
+interface EjercicioVerdaderoFalso extends EjercicioBase {
+  tipo: 'verdadero-falso';
+  respuestaCorrecta: boolean;
+}
+
+interface EjercicioCodigoEscribir extends EjercicioBase {
+  tipo: 'codigo-escribir';
+  respuestaCorrecta: string;
+  variacionesAceptadas?: string[];
+}
+
+interface EjercicioCodigoCompletar extends EjercicioBase {
+  tipo: 'codigo-completar';
+  codigoBase: string;
+  respuestasCorrectas: string[];
+}
+
+type Ejercicio = EjercicioOpcionMultiple | EjercicioVerdaderoFalso | EjercicioCodigoEscribir | EjercicioCodigoCompletar;
+
+// Tipo para las respuestas del usuario
+type RespuestaUsuario = number | boolean | string | string[];
+
+interface Respuestas {
+  [key: number]: RespuestaUsuario;
+}
+
+const EjerciciosDia3: React.FC = () => {
+  const [ejercicioActual, setEjercicioActual] = useState<number>(0);
+  const [respuestas, setRespuestas] = useState<Respuestas>({});
+  const [mostrarResultados, setMostrarResultados] = useState<boolean>(false);
+  const [codigoVisibleIndex, setCodigoVisibleIndex] = useState<number | null>(null);
+
+  const ejercicios: Ejercicio[] = [
     {
       id: 1,
       tipo: 'opcion-multiple',
@@ -295,14 +340,14 @@ tr:____(____)  {
     }
   ];
 
-  const manejarRespuesta = (valor) => {
+  const manejarRespuesta = (valor: RespuestaUsuario): void => {
     setRespuestas(prev => ({
       ...prev,
       [ejercicioActual]: valor
     }));
   };
 
-  const siguienteEjercicio = () => {
+  const siguienteEjercicio = (): void => {
     if (ejercicioActual < ejercicios.length - 1) {
       setEjercicioActual(ejercicioActual + 1);
     } else {
@@ -310,21 +355,23 @@ tr:____(____)  {
     }
   };
 
-  const ejercicioAnterior = () => {
+  const ejercicioAnterior = (): void => {
     if (ejercicioActual > 0) {
       setEjercicioActual(ejercicioActual - 1);
     }
   };
 
-  const calcularPuntaje = () => {
+  const calcularPuntaje = (): { correctas: number; total: number; porcentaje: number } => {
     let correctas = 0;
     ejercicios.forEach((ejercicio, index) => {
       const respuestaUsuario = respuestas[index];
       
-      if (ejercicio.tipo === 'opcion-multiple' || ejercicio.tipo === 'verdadero-falso') {
+      if (ejercicio.tipo === 'opcion-multiple') {
+        if (respuestaUsuario === ejercicio.respuestaCorrecta) correctas++;
+      } else if (ejercicio.tipo === 'verdadero-falso') {
         if (respuestaUsuario === ejercicio.respuestaCorrecta) correctas++;
       } else if (ejercicio.tipo === 'codigo-escribir') {
-        if (respuestaUsuario && (
+        if (respuestaUsuario && typeof respuestaUsuario === 'string' && (
           respuestaUsuario.toLowerCase().trim().includes(ejercicio.respuestaCorrecta.toLowerCase().trim()) ||
           ejercicio.variacionesAceptadas?.some(variacion => 
             respuestaUsuario.toLowerCase().trim().includes(variacion.toLowerCase().trim())
@@ -345,14 +392,14 @@ tr:____(____)  {
     return { correctas, total: ejercicios.length, porcentaje: (correctas / ejercicios.length) * 100 };
   };
 
-  const reiniciarEjercicios = () => {
+  const reiniciarEjercicios = (): void => {
     setEjercicioActual(0);
     setRespuestas({});
     setMostrarResultados(false);
     setCodigoVisibleIndex(null);
   };
 
-  const toggleCodigoVisible = (index) => {
+  const toggleCodigoVisible = (index: number): void => {
     setCodigoVisibleIndex(codigoVisibleIndex === index ? null : index);
   };
 
@@ -385,17 +432,19 @@ tr:____(____)  {
         <div className="space-y-4 mb-8">
           {ejercicios.map((ejercicio, index) => {
             const respuestaUsuario = respuestas[index];
-            let esCorrecta = false;
+            let esCorrecta: boolean = false;
             
-            if (ejercicio.tipo === 'opcion-multiple' || ejercicio.tipo === 'verdadero-falso') {
+            if (ejercicio.tipo === 'opcion-multiple') {
+              esCorrecta = respuestaUsuario === ejercicio.respuestaCorrecta;
+            } else if (ejercicio.tipo === 'verdadero-falso') {
               esCorrecta = respuestaUsuario === ejercicio.respuestaCorrecta;
             } else if (ejercicio.tipo === 'codigo-escribir') {
-              esCorrecta = respuestaUsuario && (
+              esCorrecta = Boolean(respuestaUsuario && typeof respuestaUsuario === 'string' && (
                 respuestaUsuario.toLowerCase().trim().includes(ejercicio.respuestaCorrecta.toLowerCase().trim()) ||
                 ejercicio.variacionesAceptadas?.some(variacion => 
                   respuestaUsuario.toLowerCase().trim().includes(variacion.toLowerCase().trim())
                 )
-              );
+              ));
             } else if (ejercicio.tipo === 'codigo-completar') {
               if (respuestaUsuario && Array.isArray(respuestaUsuario)) {
                 esCorrecta = ejercicio.respuestasCorrectas.every((correcta, i) => 
@@ -418,7 +467,7 @@ tr:____(____)  {
                       Ejercicio {index + 1}: {ejercicio.pregunta}
                     </h3>
                     
-                    {ejercicio.tipo === 'codigo-escribir' || ejercicio.tipo === 'codigo-completar' ? (
+                    {(ejercicio.tipo === 'codigo-escribir' || ejercicio.tipo === 'codigo-completar') && (
                       <div>
                         <button
                           onClick={() => toggleCodigoVisible(index)}
@@ -430,11 +479,18 @@ tr:____(____)  {
                         
                         {codigoVisibleIndex === index && (
                           <pre className="bg-gray-900 text-green-400 p-3 rounded text-sm overflow-x-auto mb-2">
-                            <code>{ejercicio.respuestaCorrecta}</code>
+                            <code>
+                              {ejercicio.tipo === 'codigo-escribir' 
+                                ? ejercicio.respuestaCorrecta 
+                                : ejercicio.tipo === 'codigo-completar'
+                                ? ejercicio.respuestasCorrectas.join(', ')
+                                : ''
+                              }
+                            </code>
                           </pre>
                         )}
                       </div>
-                    ) : null}
+                    )}
                     
                     <p className="text-gray-700 text-sm">{ejercicio.explicacion}</p>
                   </div>
@@ -458,13 +514,20 @@ tr:____(____)  {
 
   const ejercicio = ejercicios[ejercicioActual];
 
-  const getCategoryIcon = (categoria) => {
+  const getCategoryIcon = (categoria: string): JSX.Element => {
     if (categoria.includes('Selectores') || categoria.includes('CSS')) return <Search size={16} />;
     if (categoria.includes('Pseudoclases') || categoria.includes('Pseudoelementos')) return <Target size={16} />;
     if (categoria.includes('Box') || categoria.includes('Posicionamiento') || categoria.includes('Z-index')) return <Layout size={16} />;
     if (categoria.includes('Fonts') || categoria.includes('Unidades') || categoria.includes('Text')) return <Type size={16} />;
     if (categoria.includes('Variables') || categoria.includes('Gradientes') || categoria.includes('Shadow')) return <Palette size={16} />;
     return <Code size={16} />;
+  };
+
+  const isRespuestaEmpty = (respuesta: RespuestaUsuario | undefined): boolean => {
+    if (respuesta === undefined || respuesta === null) return true;
+    if (typeof respuesta === 'string') return respuesta.trim() === '';
+    if (Array.isArray(respuesta)) return respuesta.length === 0 || respuesta.every(item => !item || item.trim() === '');
+    return false;
   };
 
   return (
@@ -554,7 +617,7 @@ tr:____(____)  {
               </p>
             </div>
             <textarea
-              value={respuestas[ejercicioActual] || ''}
+              value={typeof respuestas[ejercicioActual] === 'string' ? respuestas[ejercicioActual] as string : ''}
               onChange={(e) => manejarRespuesta(e.target.value)}
               placeholder="Escribe tu código CSS aquí..."
               className="w-full h-32 p-3 border rounded-lg font-mono text-sm bg-gray-50 resize-none"
@@ -575,7 +638,7 @@ tr:____(____)  {
             </p>
             <input
               type="text"
-              value={respuestas[ejercicioActual]?.join?.(', ') || ''}
+              value={Array.isArray(respuestas[ejercicioActual]) ? (respuestas[ejercicioActual] as string[]).join(', ') : ''}
               onChange={(e) => manejarRespuesta(e.target.value.split(', '))}
               placeholder="Ejemplo: nth-child, even, nth-child, odd"
               className="w-full p-3 border rounded-lg font-mono text-sm"
@@ -601,7 +664,7 @@ tr:____(____)  {
 
         <button
           onClick={siguienteEjercicio}
-          disabled={respuestas[ejercicioActual] === undefined || respuestas[ejercicioActual] === ''}
+          disabled={isRespuestaEmpty(respuestas[ejercicioActual])}
           className="px-4 py-2 bg-indigo-600 text-white rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-indigo-700 flex items-center gap-2 transition-colors"
         >
           {ejercicioActual === ejercicios.length - 1 ? 'Finalizar' : 'Siguiente'}

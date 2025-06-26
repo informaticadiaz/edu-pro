@@ -1,10 +1,2 @@
 @import "tailwindcss";
 
-@theme inline {
-
-}
-
-@media (prefers-color-scheme: dark) {
-
-}
-

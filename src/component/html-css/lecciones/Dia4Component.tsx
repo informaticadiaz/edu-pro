@@ -671,7 +671,7 @@ body {
         </div>
         
         <div className="text-center">
-          <div className="bg-white bg-opacity-20 rounded-lg p-4 inline-block">
+          <div className="bg-white/20 rounded-lg p-4 inline-block">
             <h3 className="text-xl font-bold mb-2 flex items-center justify-center gap-2">
               <Award size={24} />
               ¡Felicitaciones!

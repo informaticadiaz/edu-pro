@@ -140,17 +140,17 @@ const TutoriaHTMLCSSPage = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div>
       {/* Hero Section */}
       <div className="bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 text-white">
-        <div className="max-w-6xl mx-auto px-6 py-16">
+        <div className="mx-auto px-6 py-16 ">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div>
               <div className="flex items-center gap-2 mb-4">
-                <div className="bg-white bg-opacity-20 p-2 rounded-lg">
+                <div className="bg-white/20 p-2 rounded-lg">
                   <Code className="text-white" size={24} />
                 </div>
-                <span className="bg-white bg-opacity-20 px-3 py-1 rounded-full text-sm">
+                <span className="bg-white/20  px-3 py-1 rounded-full text-sm">
                   Curso Intensivo
                 </span>
               </div>
@@ -159,20 +159,20 @@ const TutoriaHTMLCSSPage = () => {
                 Tutoría HTML & CSS
               </h1>
               
-              <p className="text-xl lg:text-2xl mb-8 text-white text-opacity-90">
+              <p className="text-xl lg:text-2xl mb-8 text-white">
                 Aprende a crear sitios web modernos y profesionales desde cero en solo 4 días
               </p>
               
               <div className="flex flex-wrap gap-4 mb-8">
-                <div className="flex items-center gap-2 bg-white bg-opacity-20 px-4 py-2 rounded-lg">
+                <div className="flex items-center gap-2 bg-white/20 px-4 py-2 rounded-lg">
                   <Clock size={20} />
                   <span>{estadisticasCurso.duracionTotal}</span>
                 </div>
-                <div className="flex items-center gap-2 bg-white bg-opacity-20 px-4 py-2 rounded-lg">
+                <div className="flex items-center gap-2 bg-white/20 px-4 py-2 rounded-lg">
                   <Target size={20} />
                   <span>{estadisticasCurso.ejercicios} ejercicios</span>
                 </div>
-                <div className="flex items-center gap-2 bg-white bg-opacity-20 px-4 py-2 rounded-lg">
+                <div className="flex items-center gap-2 bg-white/20 px-4 py-2 rounded-lg">
                   <Trophy size={20} />
                   <span>Certificación</span>
                 </div>
@@ -185,11 +185,11 @@ const TutoriaHTMLCSSPage = () => {
             </div>
             
             <div className="relative">
-              <div className="bg-white bg-opacity-10 backdrop-blur-sm rounded-2xl p-8">
+              <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8">
                 <h3 className="text-2xl font-bold mb-6 text-center">Lo que aprenderás</h3>
                 <div className="grid grid-cols-2 gap-4">
                   {tecnologias.map((tech, index) => (
-                    <div key={index} className="flex items-center gap-3 bg-white bg-opacity-20 p-3 rounded-lg">
+                    <div key={index} className="flex items-center gap-3 bg-white/20 p-3 rounded-lg">
                       <div className={tech.color}>
                         {tech.icon}
                       </div>
@@ -345,34 +345,34 @@ const TutoriaHTMLCSSPage = () => {
           <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-8 text-white">
             <div className="text-center mb-8">
               <h2 className="text-3xl font-bold mb-4">Estadísticas del Curso</h2>
-              <p className="text-lg text-white text-opacity-90">
+              <p className="text-lg text-white/90">
                 Un curso completo y estructurado para tu éxito
               </p>
             </div>
             
             <div className="grid md:grid-cols-4 gap-8 text-center">
-              <div className="bg-white bg-opacity-20 rounded-lg p-6">
+              <div className="bg-white/20 rounded-lg p-6">
                 <Clock size={32} className="mx-auto mb-3" />
                 <div className="text-2xl font-bold mb-1">12</div>
-                <div className="text-sm text-white text-opacity-80">Horas de contenido</div>
+                <div className="text-sm text-white/80">Horas de contenido</div>
               </div>
               
-              <div className="bg-white bg-opacity-20 rounded-lg p-6">
+              <div className="bg-white/20 rounded-lg p-6">
                 <Target size={32} className="mx-auto mb-3" />
                 <div className="text-2xl font-bold mb-1">65</div>
-                <div className="text-sm text-white text-opacity-80">Ejercicios prácticos</div>
+                <div className="text-sm text-white/80">Ejercicios prácticos</div>
               </div>
               
-              <div className="bg-white bg-opacity-20 rounded-lg p-6">
+              <div className="bg-white/20 rounded-lg p-6">
                 <Trophy size={32} className="mx-auto mb-3" />
                 <div className="text-2xl font-bold mb-1">4</div>
-                <div className="text-sm text-white text-opacity-80">Proyectos reales</div>
+                <div className="text-sm text-white/80">Proyectos reales</div>
               </div>
               
-              <div className="bg-white bg-opacity-20 rounded-lg p-6">
+              <div className="bg-white/20 rounded-lg p-6">
                 <Award size={32} className="mx-auto mb-3" />
                 <div className="text-2xl font-bold mb-1">100%</div>
-                <div className="text-sm text-white text-opacity-80">Enfoque práctico</div>
+                <div className="text-sm text-white/80">Enfoque práctico</div>
               </div>
             </div>
           </div>
@@ -431,7 +431,7 @@ const TutoriaHTMLCSSPage = () => {
           <h2 className="text-3xl font-bold mb-4">
             ¿Listo para comenzar tu carrera en desarrollo web?
           </h2>
-          <p className="text-lg mb-8 text-white text-opacity-90">
+          <p className="text-lg mb-8 text-white/90">
             Únete a miles de estudiantes que ya están creando sitios web profesionales
           </p>
           <button className="bg-white text-purple-600 px-8 py-4 rounded-lg font-bold text-lg hover:bg-gray-100 transition-colors flex items-center gap-2 mx-auto">
@@ -439,7 +439,7 @@ const TutoriaHTMLCSSPage = () => {
             Comenzar Curso Ahora
           </button>
           
-          <div className="flex items-center justify-center gap-8 mt-8 text-sm text-white text-opacity-80">
+          <div className="flex items-center justify-center gap-8 mt-8 text-sm text-white/80">
             <span className="flex items-center gap-1">
               <CheckCircle size={16} />
               Sin requisitos previos

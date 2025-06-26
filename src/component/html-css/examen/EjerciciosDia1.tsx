@@ -389,7 +389,7 @@ const EjerciciosDia1: React.FC = () => {
       <div className="text-center mb-8 bg-gradient-to-r from-blue-600 to-purple-600 text-white p-6 rounded-lg">
         <h1 className="text-2xl font-bold mb-2">Ejercicios de Evaluación - Día 1</h1>
         <p className="text-lg">Fundamentos de HTML</p>
-        <div className="mt-4 bg-white bg-opacity-20 rounded-lg p-3">
+        <div className="mt-4 bg-white/20 rounded-lg p-3">
           <div className="flex justify-between items-center text-sm">
             <span>Progreso: {ejercicioActual + 1} de {ejercicios.length}</span>
             <span className="flex items-center gap-2">
@@ -405,7 +405,7 @@ const EjerciciosDia1: React.FC = () => {
               </span>
             </span>
           </div>
-          <div className="w-full bg-white bg-opacity-30 rounded-full h-2 mt-3">
+          <div className="w-full bg-white/30 rounded-full h-2 mt-3">
             <div 
               className="bg-white h-2 rounded-full transition-all duration-300"
               style={{ width: `${((ejercicioActual + 1) / ejercicios.length) * 100}%` }}

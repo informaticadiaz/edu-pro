@@ -1,5 +1,6 @@
 "use client"
 import React, { useState, useEffect } from 'react';
+import { useRouter, usePathname } from 'next/navigation';
 import { 
   Menu, 
   X, 
@@ -10,7 +11,9 @@ import {
   FileText,
   CheckCircle,
   Calendar,
-  Award
+  Award,
+  Search,
+  Bell
 } from 'lucide-react';
 
 // Define types
@@ -44,9 +47,16 @@ interface ResponsiveMenuProps {
   currentRoute?: string;
 }
 
-const ResponsiveMenu: React.FC<ResponsiveMenuProps> = ({ currentRoute = 'indice' }) => {
+const ResponsiveMenu: React.FC<ResponsiveMenuProps> = ({ currentRoute }) => {
+  const router = useRouter();
+  const pathname = usePathname();
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [showSearch, setShowSearch] = useState<boolean>(false);
+
+  // Usar el pathname real si no se proporciona currentRoute
+  const currentPath = currentRoute || pathname?.split('/').pop() || 'indice';
 
   // Cerrar menú al hacer scroll en móvil
   useEffect(() => {
@@ -181,43 +191,142 @@ const ResponsiveMenu: React.FC<ResponsiveMenuProps> = ({ currentRoute = 'indice'
   };
 
   const handleNavigation = (route: string): void => {
-    // Aquí iría tu lógica de navegación (React Router, Next.js, etc.)
-    console.log(`Navegando a: ${route}`);
+    router.push(`/${route}`);
     setIsMenuOpen(false);
     setActiveDropdown(null);
   };
 
   const isActive = (route: string): boolean => {
-    return currentRoute === route;
+    return currentPath === route;
   };
 
   const getDayProgress = (dayId: string): Progress => {
-    // Lógica para calcular progreso (ejemplo)
-    const progress: ProgressMap = {
+    // Lógica mejorada para calcular progreso desde localStorage
+    const savedProgress = localStorage.getItem(`progress_${dayId}`);
+    if (savedProgress) {
+      return JSON.parse(savedProgress);
+    }
+    
+    const defaultProgress: ProgressMap = {
       dia1: { teoria: true, ejercicios: false },
       dia2: { teoria: false, ejercicios: false },
       dia3: { teoria: false, ejercicios: false },
       dia4: { teoria: false, ejercicios: false }
     };
 
-    return progress[dayId] || { teoria: false, ejercicios: false };
+    return defaultProgress[dayId] || { teoria: false, ejercicios: false };
+  };
+
+  const getOverallProgress = (): number => {
+    let completed = 0;
+    let total = 0;
+    
+    menuItems.forEach(item => {
+      if (item.submenu) {
+        const progress = getDayProgress(item.id);
+        total += 2; // teoría + ejercicios
+        if (progress.teoria) completed++;
+        if (progress.ejercicios) completed++;
+      }
+    });
+    
+    return Math.round((completed / total) * 100);
+  };
+
+  // Filtrar items para búsqueda
+  const getFilteredItems = () => {
+    if (!searchTerm) return menuItems;
+    
+    return menuItems.filter(item => {
+      const matchesTitle = item.title.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesDescription = item.description.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesSubmenu = item.submenu?.some(sub => 
+        sub.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        sub.description.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      
+      return matchesTitle || matchesDescription || matchesSubmenu;
+    });
   };
 
   return (
-    <nav className="bg-gradient-to-r from-blue-600 to-purple-600 p-2 shadow-lg border-blue-100 sticky top-0 z-50">
+    <nav className="bg-gradient-to-r from-blue-600 to-purple-600 shadow-xl sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <div className="flex-shrink-0 flex items-center">
             <div className="flex items-center gap-3">
-              <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-2 rounded-lg">
+              <div className="bg-white bg-opacity-20 p-2 rounded-lg backdrop-blur-sm">
                 <FileText className="text-white" size={24} />
               </div>
               <div className="hidden sm:block">
-                <h1 className="text-xl font-bold text-white/80">Tutoría HTML & CSS</h1>
-                <p className="text-xs text-white/90">4 días • 12 horas</p>
+                <h1 className="text-xl font-bold text-white">Tutoría HTML & CSS</h1>
+                <p className="text-xs text-white/80">4 días • 12 horas • {getOverallProgress()}% completado</p>
               </div>
             </div>
+          </div>
+
+          {/* Desktop Actions */}
+          <div className="hidden md:flex items-center gap-4">
+            {/* Search */}
+            <div className="relative">
+              <button
+                onClick={() => setShowSearch(!showSearch)}
+                className="text-white/80 hover:text-white transition-colors p-2 rounded-lg hover:bg-white/10"
+              >
+                <Search size={20} />
+              </button>
+              {showSearch && (
+                <div className="absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-lg border p-4">
+                  <input
+                    type="text"
+                    placeholder="Buscar contenido..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-blue-500"
+                    autoFocus
+                  />
+                  {searchTerm && (
+                    <div className="mt-2 max-h-60 overflow-y-auto">
+                      {getFilteredItems().map(item => (
+                        <div key={item.id} className="py-1">
+                          {item.route ? (
+                            <button
+                              onClick={() => {
+                                handleNavigation(item.route!);
+                                setShowSearch(false);
+                                setSearchTerm('');
+                              }}
+                              className="w-full text-left px-2 py-1 hover:bg-gray-100 rounded text-sm"
+                            >
+                              {item.title}
+                            </button>
+                          ) : item.submenu?.map(sub => (
+                            <button
+                              key={sub.id}
+                              onClick={() => {
+                                handleNavigation(sub.route);
+                                setShowSearch(false);
+                                setSearchTerm('');
+                              }}
+                              className="w-full text-left px-2 py-1 hover:bg-gray-100 rounded text-sm"
+                            >
+                              {item.title} - {sub.title}
+                            </button>
+                          ))}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+
+            {/* Notifications */}
+            <button className="text-white/80 hover:text-white transition-colors p-2 rounded-lg hover:bg-white/10 relative">
+              <Bell size={20} />
+              <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+            </button>
           </div>
 
           {/* Desktop Menu */}
@@ -227,18 +336,25 @@ const ResponsiveMenu: React.FC<ResponsiveMenuProps> = ({ currentRoute = 'indice'
                 <div key={item.id} className="relative group">
                   {item.submenu ? (
                     <div className="relative">
-                      <button className="flex items-center gap-1 px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 transition-colors">
+                      <button className="flex items-center gap-1 px-3 py-2 rounded-md text-sm font-medium text-white/80 hover:text-white hover:bg-white/10 transition-colors">
                         {item.icon}
                         {item.title}
                         <ChevronDown size={14} className="group-hover:rotate-180 transition-transform duration-200" />
                       </button>
                       
-                      {/* Dropdown */}
-                      <div className="absolute left-0 mt-2 w-72 bg-white/80 rounded-lg shadow-lg border invisible group-hover:bg-white/90 group-hover:visible transition-all duration-200 z-50">
+                      {/* Dropdown mejorado */}
+                      <div className="absolute left-0 mt-2 w-80 bg-white/95 backdrop-blur-sm rounded-lg shadow-xl border opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
                         <div className="p-2">
-                          <div className="px-3 py-2 border-b">
+                          <div className="px-3 py-3 border-b border-gray-200">
                             <p className="font-semibold text-gray-800">{item.title}</p>
                             <p className="text-xs text-gray-600">{item.description}</p>
+                            <div className="mt-2 flex items-center gap-2">
+                              {getDayProgress(item.id).teoria && <CheckCircle size={12} className="text-green-500" />}
+                              {getDayProgress(item.id).ejercicios && <Target size={12} className="text-blue-500" />}
+                              <span className="text-xs text-gray-500">
+                                Progreso: {getDayProgress(item.id).teoria && getDayProgress(item.id).ejercicios ? 'Completo' : 'En progreso'}
+                              </span>
+                            </div>
                           </div>
                           
                           {item.submenu.map((subItem) => {
@@ -250,12 +366,12 @@ const ResponsiveMenu: React.FC<ResponsiveMenuProps> = ({ currentRoute = 'indice'
                               <button
                                 key={subItem.id}
                                 onClick={() => handleNavigation(subItem.route)}
-                                className={`w-full text-left px-3 py-2 rounded-md text-sm hover:bg-gray-50 transition-colors flex items-center gap-3 ${
+                                className={`w-full text-left px-3 py-3 rounded-md text-sm hover:bg-gray-50 transition-colors flex items-center gap-3 ${
                                   isActive(subItem.route) ? 'bg-blue-50 text-blue-600 border-l-2 border-blue-600' : 'text-gray-700'
                                 }`}
                               >
                                 <div className="flex-shrink-0">
-                                  {item.icon}
+                                  {subItem.icon}
                                 </div>
                                 <div className="flex-1">
                                   <p className="font-medium">{subItem.title}</p>
@@ -275,8 +391,8 @@ const ResponsiveMenu: React.FC<ResponsiveMenuProps> = ({ currentRoute = 'indice'
                       onClick={() => item.route && handleNavigation(item.route)}
                       className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
                         item.route && isActive(item.route)
-                          ? 'bg-blue-100 text-blue-600'
-                          : 'text-gray-700 hover:text-blue-600 hover:bg-blue-50'
+                          ? 'bg-white/20 text-white'
+                          : 'text-white/80 hover:text-white hover:bg-white/10'
                       }`}
                     >
                       {item.icon}
@@ -292,7 +408,7 @@ const ResponsiveMenu: React.FC<ResponsiveMenuProps> = ({ currentRoute = 'indice'
           <div className="md:hidden">
             <button
               onClick={toggleMenu}
-              className="bg-gray-100 inline-flex items-center justify-center p-2 rounded-md text-gray-700 hover:text-blue-600 hover:bg-gray-200 transition-colors"
+              className="bg-white/20 backdrop-blur-sm inline-flex items-center justify-center p-2 rounded-md text-white hover:bg-white/30 transition-colors"
             >
               {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
@@ -300,17 +416,31 @@ const ResponsiveMenu: React.FC<ResponsiveMenuProps> = ({ currentRoute = 'indice'
         </div>
       </div>
 
-      {/* Mobile Menu */}
+      {/* Mobile Menu mejorado */}
       {isMenuOpen && (
-        <div className="md:hidden bg-white border-t">
-          <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 max-h-screen overflow-y-auto">
-            {menuItems.map((item) => (
+        <div className="md:hidden bg-white/95 backdrop-blur-sm border-t">
+          {/* Search móvil */}
+          <div className="px-4 py-3 border-b">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={16} />
+              <input
+                type="text"
+                placeholder="Buscar..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:border-blue-500 text-sm"
+              />
+            </div>
+          </div>
+
+          <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 max-h-96 overflow-y-auto">
+            {getFilteredItems().map((item) => (
               <div key={item.id}>
                 {item.submenu ? (
                   <div>
                     <button
                       onClick={() => toggleDropdown(item.id)}
-                      className="w-full flex items-center justify-between px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 transition-colors"
+                      className="w-full flex items-center justify-between px-3 py-3 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 transition-colors"
                     >
                       <div className="flex items-center gap-3">
                         {item.icon}
@@ -328,7 +458,7 @@ const ResponsiveMenu: React.FC<ResponsiveMenuProps> = ({ currentRoute = 'indice'
                     </button>
                     
                     {activeDropdown === item.id && (
-                      <div className="pl-4 space-y-1">
+                      <div className="pl-4 space-y-1 bg-gray-50 rounded-lg ml-2 mr-2">
                         {item.submenu.map((subItem) => {
                           const progress = getDayProgress(item.id);
                           const isCompleted = subItem.id.includes('ejercicio') ? 
@@ -338,7 +468,7 @@ const ResponsiveMenu: React.FC<ResponsiveMenuProps> = ({ currentRoute = 'indice'
                             <button
                               key={subItem.id}
                               onClick={() => handleNavigation(subItem.route)}
-                              className={`w-full text-left px-3 py-2 rounded-md text-sm hover:bg-gray-50 transition-colors flex items-center gap-3 ${
+                              className={`w-full text-left px-3 py-3 rounded-md text-sm hover:bg-white transition-colors flex items-center gap-3 ${
                                 isActive(subItem.route) ? 'bg-blue-50 text-blue-600 border-l-2 border-blue-600' : 'text-gray-600'
                               }`}
                             >
@@ -361,7 +491,7 @@ const ResponsiveMenu: React.FC<ResponsiveMenuProps> = ({ currentRoute = 'indice'
                 ) : (
                   <button
                     onClick={() => item.route && handleNavigation(item.route)}
-                    className={`w-full text-left flex items-center gap-3 px-3 py-2 rounded-md text-base font-medium transition-colors ${
+                    className={`w-full text-left flex items-center gap-3 px-3 py-3 rounded-md text-base font-medium transition-colors ${
                       item.route && isActive(item.route)
                         ? 'bg-blue-100 text-blue-600'
                         : 'text-gray-700 hover:text-blue-600 hover:bg-blue-50'
@@ -378,11 +508,19 @@ const ResponsiveMenu: React.FC<ResponsiveMenuProps> = ({ currentRoute = 'indice'
             ))}
           </div>
           
-          {/* Footer del menú móvil */}
-          <div className="border-t bg-gray-50 px-4 py-3">
-            <div className="flex items-center gap-2 text-sm text-gray-600">
-              <Award size={16} />
-              <span>Progreso del curso: 25%</span>
+          {/* Footer del menú móvil mejorado */}
+          <div className="border-t bg-gradient-to-r from-blue-50 to-purple-50 px-4 py-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2 text-sm text-gray-600">
+                <Award size={16} />
+                <span>Progreso: {getOverallProgress()}%</span>
+              </div>
+              <div className="w-20 bg-gray-200 rounded-full h-2">
+                <div 
+                  className="bg-gradient-to-r from-blue-500 to-purple-500 h-2 rounded-full transition-all duration-300"
+                  style={{ width: `${getOverallProgress()}%` }}
+                ></div>
+              </div>
             </div>
           </div>
         </div>

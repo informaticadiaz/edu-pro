@@ -430,13 +430,13 @@ const EjerciciosDia4: React.FC = () => {
     const maestria = getNivelMaestria(porcentaje);
     
     return (
-      <div className="max-w-4xl mx-auto p-6 bg-white">
+      <div className="max-w-4xl mx-auto p-6 bg-white/20">
         <div className="text-center mb-8">
           <div className={`inline-flex items-center gap-3 p-6 rounded-lg ${maestria.bg}`}>
             <Trophy size={32} className={maestria.color} />
             <div>
-              <h2 className="text-2xl font-bold text-gray-800">¡Curso Completado!</h2>
-              <p className="text-lg">
+              <h2 className="text-2xl font-bold text-pink-800">¡Curso Completado!</h2>
+              <p className="text-lg text-pink-600">
                 {correctas} de {total} ejercicios correctos ({porcentaje.toFixed(1)}%)
               </p>
               <p className={`text-lg font-medium ${maestria.color}`}>
@@ -511,7 +511,7 @@ const EjerciciosDia4: React.FC = () => {
                     <XCircle className="text-red-600 mt-1" size={20} />
                   }
                   <div className="flex-1">
-                    <h3 className="font-semibold text-gray-800 mb-2">
+                    <h3 className="font-semibold text-black mb-2">
                       Ejercicio {index + 1}: {ejercicio.pregunta}
                     </h3>
                     
@@ -557,7 +557,7 @@ const EjerciciosDia4: React.FC = () => {
           </button>
           
           <div className="bg-gray-50 p-4 rounded-lg">
-            <h3 className="font-bold text-gray-800 mb-2">🎓 Próximos pasos recomendados:</h3>
+            <h3 className="font-bold text-black mb-2">🎓 Próximos pasos recomendados:</h3>
             <div className="grid md:grid-cols-2 gap-4 text-sm text-gray-700">
               <div>
                 <h4 className="font-semibold">Tecnologías a aprender:</h4>
@@ -602,7 +602,7 @@ const EjerciciosDia4: React.FC = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-6 bg-white">
+    <div className="max-w-4xl mx-auto p-6 bg-black/5">
       {/* Header */}
       <div className="text-center mb-8 bg-gradient-to-r from-emerald-600 to-blue-600 text-white p-6 rounded-lg">
         <h1 className="text-2xl font-bold mb-2">Ejercicios de Evaluación - Día 4</h1>
@@ -626,7 +626,7 @@ const EjerciciosDia4: React.FC = () => {
           </div>
           <div className="w-full bg-white/30 rounded-full h-2 mt-3">
             <div 
-              className="bg-white h-2 rounded-full transition-all duration-300"
+              className="bg-white/10 h-2 rounded-full transition-all duration-300"
               style={{ width: `${((ejercicioActual + 1) / ejercicios.length) * 100}%` }}
             ></div>
           </div>
@@ -634,8 +634,8 @@ const EjerciciosDia4: React.FC = () => {
       </div>
 
       {/* Ejercicio Actual */}
-      <div className="bg-white border rounded-lg p-6 mb-6 shadow-sm">
-        <h2 className="text-xl font-semibold mb-4 text-gray-800">
+      <div className="bg-white/10 border rounded-lg p-6 mb-6 shadow-sm">
+        <h2 className="text-xl font-semibold mb-4 text-white">
           Ejercicio {ejercicioActual + 1}: {ejercicio.pregunta}
         </h2>
 
@@ -643,7 +643,7 @@ const EjerciciosDia4: React.FC = () => {
         {ejercicio.tipo === 'opcion-multiple' && (
           <div className="space-y-3">
             {ejercicio.opciones.map((opcion, index) => (
-              <label key={index} className="flex items-center p-3 border rounded-lg hover:bg-gray-50 cursor-pointer transition-colors">
+              <label key={index} className="flex items-center p-3 border rounded-lg hover:bg-gray-50/10 cursor-pointer transition-colors">
                 <input
                   type="radio"
                   name="opcion"
@@ -662,7 +662,7 @@ const EjerciciosDia4: React.FC = () => {
         {ejercicio.tipo === 'verdadero-falso' && (
           <div className="space-y-3">
             {[true, false].map((valor) => (
-              <label key={valor.toString()} className="flex items-center p-3 border rounded-lg hover:bg-gray-50 cursor-pointer transition-colors">
+              <label key={valor.toString()} className="flex items-center p-3 border rounded-lg hover:bg-gray-50/10 cursor-pointer transition-colors">
                 <input
                   type="radio"
                   name="verdadero-falso"
@@ -671,7 +671,7 @@ const EjerciciosDia4: React.FC = () => {
                   onChange={() => manejarRespuesta(valor)}
                   className="mr-3"
                 />
-                <span className={`font-medium ${valor ? 'text-green-700' : 'text-red-700'}`}>
+                <span className={`font-medium ${valor ? 'text-white' : 'text-white'}`}>
                   {valor ? '✓ Verdadero' : '✗ Falso'}
                 </span>
               </label>
@@ -682,8 +682,8 @@ const EjerciciosDia4: React.FC = () => {
         {/* Código para escribir */}
         {ejercicio.tipo === 'codigo-escribir' && (
           <div>
-            <div className="mb-3 p-3 bg-emerald-50 rounded-lg">
-              <p className="text-sm text-emerald-700">
+            <div className="mb-3 p-3 bg-emerald-50/5 rounded-lg">
+              <p className="text-sm text-white">
                 💡 <strong>Consejo:</strong> Escribe solo la propiedad y valor CSS necesarios, sin llaves adicionales.
               </p>
             </div>
@@ -691,7 +691,7 @@ const EjerciciosDia4: React.FC = () => {
               value={typeof respuestas[ejercicioActual] === 'string' ? respuestas[ejercicioActual] as string : ''}
               onChange={(e) => manejarRespuesta(e.target.value)}
               placeholder="Escribe tu código CSS aquí..."
-              className="w-full h-32 p-3 border rounded-lg font-mono text-sm bg-gray-50 resize-none"
+              className="w-full h-32 p-3 border rounded-lg font-mono text-sm bg-gray-50 text-gray-800 resize-none"
             />
           </div>
         )}
@@ -704,7 +704,7 @@ const EjerciciosDia4: React.FC = () => {
                 <code>{ejercicio.codigoBase}</code>
               </pre>
             </div>
-            <p className="text-sm text-gray-600 mb-3">
+            <p className="text-md text-white mb-3">
               Completa los espacios en blanco (escribe solo las palabras que faltan, separadas por comas):
             </p>
             <input
@@ -723,12 +723,12 @@ const EjerciciosDia4: React.FC = () => {
         <button
           onClick={ejercicioAnterior}
           disabled={ejercicioActual === 0}
-          className="px-4 py-2 border rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 transition-colors"
+          className="px-4 py-2 border rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50/10 transition-colors"
         >
           Anterior
         </button>
 
-        <div className="flex items-center gap-2 text-sm text-gray-600">
+        <div className="flex items-center gap-2 text-md text-white">
           <AlertCircle size={16} />
           <span>¡Último día! Da lo mejor de ti</span>
         </div>
